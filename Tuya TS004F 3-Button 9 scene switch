@@ -1,0 +1,116 @@
+blueprint:
+  name: Zigbee2MQTT - Tuya TS004F 3-Button 9 scene switch
+  description: Make use of your TS004F inside of the 9-scene mode. Mine was shipped
+    as a dimmer. If you follow the instructions from the Zigbee2mqtt, you can change
+    the device's internal profile. https://www.zigbee2mqtt.io/devices/TS004F.html
+  domain: automation
+  input:
+    switch:
+      name: TS004F Switch
+      description: Tuya 3-Button Scene Switch to use
+      selector:
+        entity:
+          domain: sensor
+          integration: mqtt
+          multiple: false
+    button_1_single_press:
+      name: Single Press - Button 1
+      description: Action to run on button 1 single press
+      default: []
+      selector:
+        action: {}
+    button_1_double_press:
+      name: Double Press - Button 1
+      description: Action to run on button 1 double press
+      default: []
+      selector:
+        action: {}
+    button_1_held:
+      name: Hold - Button 1
+      description: Action to run on button 1 held for 5 seconds
+      default: []
+      selector:
+        action: {}
+    button_2_single_press:
+      name: Single Press - Button 2
+      description: Action to run on button 2 single press
+      default: []
+      selector:
+        action: {}
+    button_2_double_press:
+      name: Double Press - Button 2
+      description: Action to run on button 2 double press
+      default: []
+      selector:
+        action: {}
+    button_2_held:
+      name: Hold - Button 2
+      description: Action to run on button 2 held for 5 seconds
+      default: []
+      selector:
+        action: {}
+    button_3_single_press:
+      name: Single Press - Button 3
+      description: Action to run on button 3 single press
+      default: []
+      selector:
+        action: {}
+    button_3_double_press:
+      name: Double Press - Button 3
+      description: Action to run on button 3 double press
+      default: []
+      selector:
+        action: {}
+    button_3_held:
+      name: Hold - Button 3
+      description: Action to run on button 3 held for 5 seconds
+      default: []
+      selector:
+        action: {}
+  source_url: https://github.com/moshess/homeassistant-blueprints/blob/8c49cb7e7d0e428ac3023d556ce08fe29c8f2395/mqtt/tuya-ts004f.yaml
+mode: single
+max_exceeded: silent
+variables:
+  command: '{{ trigger.to_state.state }}'
+trigger:
+- platform: state
+  entity_id: !input switch
+  to:
+  - 1_single
+  - 1_double
+  - 1_hold
+  - 2_single
+  - 2_double
+  - 2_hold
+  - 3_single
+  - 3_double
+  - 3_hold
+action:
+- choose:
+  - conditions:
+    - '{{ command == ''1_single'' }}'
+    sequence: !input button_1_single_press
+  - conditions:
+    - '{{ command == ''1_double'' }}'
+    sequence: !input button_1_double_press
+  - conditions:
+    - '{{ command == ''1_hold'' }}'
+    sequence: !input button_1_held
+  - conditions:
+    - '{{ command == ''2_single'' }}'
+    sequence: !input button_2_single_press
+  - conditions:
+    - '{{ command == ''2_double'' }}'
+    sequence: !input button_2_double_press
+  - conditions:
+    - '{{ command == ''2_hold'' }}'
+    sequence: !input button_2_held
+  - conditions:
+    - '{{ command == ''3_single'' }}'
+    sequence: !input button_3_single_press
+  - conditions:
+    - '{{ command == ''3_double'' }}'
+    sequence: !input button_3_double_press
+  - conditions:
+    - '{{ command == ''3_hold'' }}'
+    sequence: !input button_3_held
